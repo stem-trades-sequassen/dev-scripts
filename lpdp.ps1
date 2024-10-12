@@ -15,10 +15,10 @@ try
 catch 
 {
     Write-Host "Invalid Input."
-    $renameImput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
+    $renameInput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
     $renameInput = [System.Convert]::ToBoolean($renameInput)
 }
-if (renameInput = True)
+if ($renameInput = True)
 {
     Write-Host "Renaming Host"
     $hostNewName = Read-Host -Prompt "New Hostname"
