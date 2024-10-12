@@ -24,7 +24,13 @@ if ($renameInput = True)
     $hostNewName = Read-Host -Prompt "New Hostname"
     Rename-Computer -NewName $hostNewName
 }else{}
-
+<# 
+Network Configuration
+Necessary for WinRM stuff.
+ #>
+$connectionProfile = Get-NetConnectionProfile
+$networkSSID = $connectionProfile.name
+Set-NetConnectionProfile -Name $networkSSID -NetworkCategory Private
 <#
 SSH SETUP
     ENABLING SSH SERVICE
@@ -34,7 +40,8 @@ SSH SETUP
 
 TODO: Increase verbosity and alerts for end-user
 #>
-
+<# This #>
+Add-WindowsCapabiltiy -Online -Name OpenSSH.Server~~~~0.0.1.0 # Yes, hardcoding the version is necessary. Don't ask, Windows thing.
 Start-Service sshd
 Get-Service sshd
 Set-Service -Name sshd -StartupType 'Automatic'
