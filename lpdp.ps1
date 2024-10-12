@@ -1,8 +1,9 @@
 <#
 STEM/Trades Laptop Deployment Script
 - Activates OpenSSH feature and sets service to automatic
-- Installs Tailscale and connects to the STEM/Trades Tailnet [To be configured with a yubikey]
-- Once Tailscale is installed, installs puppet-agent and connects to the puppetserver running on stem-server
+- Installs Tailscale and connects to the STEM/Trades Tailnet [To be configured with a yubikey?]
+- Once Tailscale is installed, configures SSH & WinRM to allow remote management
+- Setup from there will be managed by an Ansible playbook for the inventory.
 #>
 Write-Host "The hostname of this computer is: "
 Write-Host $env:computername
@@ -39,16 +40,22 @@ Get-Service sshd
 Set-Service -Name sshd -StartupType 'Automatic'
 Get-NetFirewallRule -Name *ssh*
 
+<# WinRM Setup #>
+winrm quickconfig
 <#
 TAILSCALE SETUP
 
 TODO: Silent installation if possible, as well as secrets management.
-Idea is to have a auth keyfile on a secure drive that can be plugged into the laptop for "headless" install of tailscale
+Idea is to have a auth keyfile on a secure drive for the season that can be plugged into the laptop for "headless" install of tailscale
 Will also research tagging and trying to isolate to their own tags, while still allowing outside access.
 #>
-$tailScaleDownloadUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe"
-Invoke-WebRequest $tailScaleDownloadUrl -OutFile "C:\Users\Default\AppData\Local\Temp\tailscale-setup-latest.exe"
-Start-Process -FilePath "tailscale-setup-latest.exe" -Wait
+$tailScaleDownloadUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.76.0-amd64.msi" # Hardcoded for now
+Invoke-WebRequest $tailScaleDownloadUrl -OutFile "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi"
+msiexec /i "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi" /quiet /passive /qn
+# Start-Process -FilePath "tailscale-setup-latest.exe" -Wait
+# Not using the .exe anymore
 
+<# RIP Puppet, you're just too obtuse for my small brain to handle.
 $puppetAgentDownloadUrl = "https://downloads.puppetlabs.com/windows/puppet8/puppet-agent-x64-latest.msi" # Puppet does not offer a direct URI to the latest installer, update link every season.
 Invoke-WebRequest $puppetAgentDownloadUrl -OutFile "C:\Users\Default\AppData\Local\Temp\puppet-agent-x64-latest.msi"
+#>
