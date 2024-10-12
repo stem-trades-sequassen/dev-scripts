@@ -7,16 +7,16 @@ STEM/Trades Laptop Deployment Script
 #>
 Write-Host "The hostname of this computer is: "
 Write-Host $env:computername
-$renameImput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
+$renameInput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
 try 
 {
-    $renameInput = [System.Convert]:ToBoolean($renameInput)
+    $renameInput = [System.Convert]::ToBoolean($renameInput)
 }
 catch 
 {
     Write-Host "Invalid Input."
     $renameImput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
-    $renameInput = [System.Convert]:ToBoolean($renameInput)
+    $renameInput = [System.Convert]::ToBoolean($renameInput)
 }
 if (renameInput = True)
 {
