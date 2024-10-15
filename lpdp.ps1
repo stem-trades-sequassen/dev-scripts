@@ -59,10 +59,10 @@ Will also research tagging and trying to isolate to their own tags, while still 
 $tailScaleDownloadUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.76.0-amd64.msi" # Hardcoded for now
 Invoke-WebRequest $tailScaleDownloadUrl -OutFile "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi"
 msiexec /i "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi" /quiet /passive /qn
-# Start-Process -FilePath "tailscale-setup-latest.exe" -Wait
-# Not using the .exe anymore
-
-<# RIP Puppet, you're just too obtuse for my small brain to handle.
-$puppetAgentDownloadUrl = "https://downloads.puppetlabs.com/windows/puppet8/puppet-agent-x64-latest.msi" # Puppet does not offer a direct URI to the latest installer, update link every season.
-Invoke-WebRequest $puppetAgentDownloadUrl -OutFile "C:\Users\Default\AppData\Local\Temp\puppet-agent-x64-latest.msi"
+<#
+$authKeyFile = Get-Content -Path "C:\" 
+& 'C:\Program Files\Tailscale\tailscale.exe' up --authkey $authKeyFile
 #>
+
+<# Creating the Student User #>
+New-LocalUser -Name 'SeqUser' -Description 'Student account' -NoPassword
