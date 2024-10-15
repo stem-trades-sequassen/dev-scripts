@@ -5,8 +5,7 @@ STEM/Trades Laptop Deployment Script
 - Once Tailscale is installed, configures SSH & WinRM to allow remote management
 - Setup from there will be managed by an Ansible playbook for the inventory.
 #>
-Write-Host "The hostname of this computer is: "
-Write-Host $env:computername
+Write-Host "The hostname of this computer is: $env:computername"
 $renameInput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
 try 
 {
@@ -18,12 +17,14 @@ catch
     $renameInput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
     $renameInput = [System.Convert]::ToBoolean($renameInput)
 }
-if ($renameInput = True)
+if ($renameInput -eq $true)
 {
     Write-Host "Renaming Host"
     $hostNewName = Read-Host -Prompt "New Hostname"
     Rename-Computer -NewName $hostNewName
-}else{}
+} else {
+    Write-Host "No changes made."
+}
 <# 
 Network Configuration
 Necessary for WinRM stuff.
@@ -41,7 +42,7 @@ SSH SETUP
 TODO: Increase verbosity and alerts for end-user
 #>
 <# This #>
-Add-WindowsCapabiltiy -Online -Name OpenSSH.Server~~~~0.0.1.0 # Yes, hardcoding the version is necessary. Don't ask, Windows thing.
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0 # Yes, hardcoding the version is necessary. Don't ask, Windows thing.
 Start-Service sshd
 Get-Service sshd
 Set-Service -Name sshd -StartupType 'Automatic'
