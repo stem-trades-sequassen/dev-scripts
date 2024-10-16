@@ -3,6 +3,7 @@ STEM/Trades Laptop Deployment Script
 - Activates OpenSSH feature and sets service to automatic
 - Installs Tailscale and connects to the STEM/Trades Tailnet [To be configured with a yubikey?]
 - Once Tailscale is installed, configures SSH & WinRM to allow remote management
+- Copy SSH key from deployment drive to proper location for Windows
 - Setup from there will be managed by an Ansible playbook for the inventory.
 #>
 Write-Host "The hostname of this computer is: $env:computername"
@@ -60,10 +61,26 @@ Will also research tagging and trying to isolate to their own tags, while still 
 $tailScaleDownloadUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.76.0-amd64.msi" # Hardcoded for now
 Invoke-WebRequest $tailScaleDownloadUrl -OutFile "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi"
 msiexec /i "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi" /quiet /passive /qn
+
 <#
-$authKeyFile = Get-Content -Path "C:\" 
+In the same working directory as this script, create a extensionless file named 'authkey' with the content containing only your authkey.
+Once done, uncomment the following code block
+#>
+<#
+$authKeyFile = Get-Content -Path (Join-Path $PSScriptRoot "authkey")
 & 'C:\Program Files\Tailscale\tailscale.exe' up --authkey $authKeyFile
 #>
 
 <# Creating the Student User #>
 New-LocalUser -Name 'SeqUser' -Description 'Student account' -NoPassword
+Add-LocalGroupMember -Group 'Users' -Member 'SeqUser'
+
+<#
+In the same working directory as this script, copy your public SSH key and update the command below to match its name.
+Once done, uncomment the following code block
+#>
+<#
+$sshPubKey = Join-Path $PSScriptRoot "id_ed25519.pub") # Change 'id_ed25519.pub' to whatever name you have for your public key file. Make sure it's in the same directory as the script
+Copy-Item -Path $sshPubKey -Destination "C:\ProgramData\ssh\administrators_authorized_keys"
+icacls.exe "C:\ProgramData\ssh\administrators_authorized_keys" /inheritance:r /grant "Administrators:F" /grant "SYSTEM:F"
+#>
