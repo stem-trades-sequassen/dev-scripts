@@ -19,3 +19,25 @@ if ($renameInput -eq $true)
 } else {
     Write-Host "No changes made."
 }
+
+# Prompt for admin password
+$adminPassword = Read-Host "Enter password for Admin account" -AsSecureString
+
+# Create Admin account
+$adminUsername = "SEQAdmin"
+New-LocalUser -Name $adminUsername -Password $adminPassword -FullName "Administrator Account" -Description "Custom Admin account"
+Add-LocalGroupMember -Group "Administrators" -Member $adminUsername
+Write-Host "Admin account '$adminUsername' created and added to Administrators group."
+
+# Prompt for guest password
+$guestPassword = Read-Host "Enter password for Guest account" -AsSecureString
+
+# Create Guest account
+$guestUsername = "SEQGuest"
+New-LocalUser -Name $guestUsername -Password $guestPassword -FullName "Guest Account" -Description "Custom Guest account"
+Write-Host "Guest account '$guestUsername' created."
+
+# Optional: Disable guest account (uncomment if needed)
+# Disable-LocalUser -Name $guestUsername
+# Write-Host "Guest account '$guestUsername' has been disabled."
+
