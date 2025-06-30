@@ -33,7 +33,7 @@ Write-Host "Admin account '$adminUsername' created and added to Administrators g
 $guestPassword = Read-Host "Enter password for Guest account" -AsSecureString
 
 # Create Guest account
-$guestUsername = "SEQGuest"
+$guestUsername = "SeqUser"
 New-LocalUser -Name $guestUsername -Password $guestPassword -FullName "Guest Account" -Description "Custom Guest account"
 Write-Host "Guest account '$guestUsername' created."
 
