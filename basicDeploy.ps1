@@ -20,29 +20,43 @@ if ($renameInput -eq $true)
     Write-Host "No changes made."
 }
 
-# Prompt for admin password
-$adminPassword = Read-Host "Enter password for Admin account" -AsSecureString
+$adminInput = Read-Host -Prompt "Do you need to update admin/guest accounts? [True/False]"
 
-# Create Admin account
-$adminUsername = "SEQAdmin"
-New-LocalUser -Name $adminUsername -Password $adminPassword -FullName "Administrator Account" -Description "Custom Admin account"
-Add-LocalGroupMember -Group "Administrators" -Member $adminUsername
-Write-Host "Admin account '$adminUsername' created and added to Administrators group."
+try 
+{
+    $adminInput = [System.Convert]::ToBoolean($adminInput)
+}
+catch 
+{
+    Write-Host "Invalid Input."
+    $adminInput = Read-Host -Prompt "Do you need to update admin/guest accounts? [True/False]"
+    $adminInput = [System.Convert]::ToBoolean($adminInput)
+}
+if ($adminInput -eq $true)
+{
+    # Prompt for admin password
+    $adminPassword = Read-Host "Enter password for Admin account" -AsSecureString
 
-# Prompt for guest password
-$guestPassword = Read-Host "Enter password for Guest account" -AsSecureString
+    # Create Admin account
+    $adminUsername = "SEQAdmin"
+    New-LocalUser -Name $adminUsername -Password $adminPassword -FullName "Administrator Account" -Description "Custom Admin account"
+    Add-LocalGroupMember -Group "Administrators" -Member $adminUsername
+    Write-Host "Admin account '$adminUsername' created and added to Administrators group."
 
-# Create Guest account
-$guestUsername = "SeqUser"
-New-LocalUser -Name $guestUsername -Password $guestPassword -FullName "Guest Account" -Description "Custom Guest account"
-Write-Host "Guest account '$guestUsername' created."
-Remove-LocalGroupMember -Group "Administrators" -Member "SeqUser"
-Add-LocalGroupMember -Group "Guests" -Member "SeqUser"
+    # Prompt for guest password
+    $guestPassword = Read-Host "Enter password for Guest account" -AsSecureString
 
-# Add Visual Studio Code and Python
-winget install -e --id Python.Python.3.11
-winget install -e --id Microsoft.VisualStudioCode
-# Optional: Disable guest account (uncomment if needed)
-# Disable-LocalUser -Name $guestUsername
-# Write-Host "Guest account '$guestUsername' has been disabled."
+    # Create Guest account
+    $guestUsername = "SeqUser"
+    New-LocalUser -Name $guestUsername -Password $guestPassword -FullName "Guest Account" -Description "Custom Guest account"
+    Write-Host "Guest account '$guestUsername' created."
+    Remove-LocalGroupMember -Group "Administrators" -Member "SeqUser"
+    Add-LocalGroupMember -Group "Guests" -Member "SeqUser"
+} else {
+    Write-Host "No changes made."
+}
+winget install -e --id Python.Python.3.11 --scope machine
+winget install -e --id Microsoft.VisualStudioCode --scope machine
+.\"setup_kerbal_space_program_1.12.5.03190_(64bit)_(60913)"
+
 

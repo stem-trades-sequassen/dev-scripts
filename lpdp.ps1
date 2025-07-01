@@ -1,3 +1,8 @@
+###
+### CURRENTLY DEFUNCT AND USED FOR CANNIBALIZATION OF CODE
+###
+
+
 <#
 STEM/Trades Laptop Deployment Script
 - Activates OpenSSH feature and sets service to automatic
