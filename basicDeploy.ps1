@@ -1,3 +1,17 @@
+<#
+STEM/Trades Laptop Deployment Script
+- Sets hostname of laptop to match inventory tags
+- Activates Administrator account and lowers priveleges of student account
+- Installs necessary components for use by scouts
+
+# Future features
+- Activates OpenSSH feature and sets service to automatic
+- Installs Tailscale and connects to the STEM/Trades Tailnet [To be configured with a yubikey?]
+- Once Tailscale is installed, configures SSH & WinRM to allow remote management
+- Copy SSH key from deployment drive to proper location for Windows
+- Setup from there will be managed by an Ansible playbook for the inventory.
+#>
+
 # Hostname Update
 Write-Host "The hostname of this computer is: $env:computername"
 $renameInput = Read-Host -Prompt "Do you need to update this hostname? [True/False]"
