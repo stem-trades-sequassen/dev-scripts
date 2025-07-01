@@ -36,6 +36,9 @@ $guestPassword = Read-Host "Enter password for Guest account" -AsSecureString
 $guestUsername = "SeqUser"
 New-LocalUser -Name $guestUsername -Password $guestPassword -FullName "Guest Account" -Description "Custom Guest account"
 Write-Host "Guest account '$guestUsername' created."
+Remove-LocalGroupMember -Group "Administrators" -Member "SeqUser"
+Add-LocalGroupMember -Group "Guests" -Member "SeqUser"
+
 
 # Optional: Disable guest account (uncomment if needed)
 # Disable-LocalUser -Name $guestUsername
