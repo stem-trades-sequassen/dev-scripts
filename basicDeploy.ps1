@@ -39,7 +39,9 @@ Write-Host "Guest account '$guestUsername' created."
 Remove-LocalGroupMember -Group "Administrators" -Member "SeqUser"
 Add-LocalGroupMember -Group "Guests" -Member "SeqUser"
 
-
+# Add Visual Studio Code and Python
+winget install -e --id Python.Python.3.11
+winget install -e --id Microsoft.VisualStudioCode
 # Optional: Disable guest account (uncomment if needed)
 # Disable-LocalUser -Name $guestUsername
 # Write-Host "Guest account '$guestUsername' has been disabled."
