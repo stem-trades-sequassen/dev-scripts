@@ -54,22 +54,15 @@ winrm quickconfig
 <#
 TAILSCALE SETUP
 
-TODO: Silent installation if possible, as well as secrets management.
-Idea is to have a auth keyfile on a secure drive for the season that can be plugged into the laptop for "headless" install of tailscale
-Will also research tagging and trying to isolate to their own tags, while still allowing outside access.
+
+TODO: research tagging and trying to isolate to their own tags, while still allowing outside access.
 #>
 $tailScaleDownloadUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.76.0-amd64.msi" # Hardcoded for now
 Invoke-WebRequest $tailScaleDownloadUrl -OutFile "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi"
-msiexec /i "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi" /quiet /passive /qn
-
-<#
-In the same working directory as this script, create a extensionless file named 'authkey' with the content containing only your authkey.
-Once done, uncomment the following code block
-#>
-<#
+msiexec TS_UNATTENDEDMODE="always" /i "C:\Users\Default\AppData\Local\Temp\tailscale-setup-1.76.0-amd64.msi" /quiet /passive /qn
+<# In the same working directory as this script, create a extensionless file named 'authkey' with the content containing only your authkey. #>
 $authKeyFile = Get-Content -Path (Join-Path $PSScriptRoot "authkey")
 & 'C:\Program Files\Tailscale\tailscale.exe' up --authkey $authKeyFile
-#>
 
 <# Creating the Student User #>
 New-LocalUser -Name 'SeqUser' -Description 'Student account' -NoPassword
